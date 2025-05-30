@@ -144,7 +144,7 @@ const ProfilePage: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Tech Stack</h3>
-                <p className="mt-1 dark:text-white">Typescript, React, Firebase, Tailwind CSS</p>
+                <p className="mt-1 dark:text-white">Typescript, ffReact, Firebase, Tailwind CSS</p>
               </div>
               <div className="pt-4 text-center text-sm text-gray-500 dark:text-gray-400">
                 © 2025 Smart Expense Tracker. All rights reserved.
