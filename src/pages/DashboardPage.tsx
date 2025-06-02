@@ -112,7 +112,7 @@ const DashboardPage: React.FC = () => {
                     </div>
                     <p className={`font-medium ${transaction.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                       {transaction.type === 'income' ? '+' : '-'}
-                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(transaction.amount)}
+                      {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(transaction.amount)}
                     </p>
                   </div>
                 ))}
