@@ -202,8 +202,8 @@ Below are real screenshots showing different parts and features of the applicati
 
 ## 👨‍💻 Author & Credits
 
-Made with ❤️ by **Saket Sinha**  
-**Email:** saketsinha19@gmail.com  
+Made with ❤️ by **Saket Kumar Sinha**  
+**Email:** imsaket123@gmail.com  
 **GitHub:** [sinha-19](https://github.com/sinha-19)  
 **Year:** © 2025
 
@@ -212,7 +212,7 @@ Made with ❤️ by **Saket Sinha**
 ## 📝 License
 
 This project is open source and free to use for learning and personal use.  
-**© 2025 Saket Sinha. All rights reserved.**
+**© 2025 Saket Kumar Sinha. All rights reserved.**
 
 ---
 
