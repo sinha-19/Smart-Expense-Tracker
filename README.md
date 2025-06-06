@@ -1,5 +1,35 @@
 # Smart Expense Tracker (React + Firebase + TypeScript)
 
+---
+
+## 🛠️ Workflow Diagram
+
+```mermaid
+flowchart TD
+    Start([User Launches App])
+    Start --> Auth{Is User Logged In?}
+    Auth -- No --> Login[Show Login/Register Page]
+    Login --> Auth
+    Auth -- Yes --> Dashboard[Dashboard]
+    Dashboard --> AddTrans[Add/Edit/Delete Transaction]
+    AddTrans --> Firestore[Sync with Firestore]
+    Firestore --> Dashboard
+    Dashboard --> ViewList[View Transactions]
+    ViewList --> EditOrDelete{Edit or Delete?}
+    EditOrDelete -- Yes --> AddTrans
+    EditOrDelete -- No --> Dashboard
+    Dashboard --> Export[Export CSV]
+    Export --> Dashboard
+    Dashboard --> Analytics[View Analytics]
+    Analytics --> Dashboard
+    Dashboard --> Settings[Profile/Settings]
+    Settings --> Dashboard
+    Dashboard --> Logout[Log Out]
+    Logout --> Start
+```
+
+---
+
 A **Smart Expense Tracker** web app designed for real-world personal finance management with a modern, responsive UI tailored for Indian users. Built using **React.js**, **TypeScript**, **Firebase** (Authentication & Firestore), **Tailwind CSS**, and **Recharts**. Effortlessly track your income and expenses with real-time sync, beautiful analytics, and seamless user experience.
 
 **Live Demo:**  
@@ -247,176 +277,3 @@ Beginners welcome!
 
 **⭐️ If you like this project, please star the repo and share it!**  
 **Live Demo:** [expense-tracker-saket.netlify.app](https://expense-tracker-saket.netlify.app)
-
----
-
-## 🗺️ Workflow Diagram
-
-```mermaid
-flowchart TD
-    %% User and Browser
-    User["User"]:::external
-    Browser["Browser (Client)"]:::external
-    User -->|"interacts"| Browser
-
-    %% React Application
-    subgraph "React Application" 
-        direction TB
-        Router["Routing Layer\n(src/App.tsx)"]:::frontend
-        ProtectedRoute["ProtectedRoute HOC\n(Guard)"]:::frontend
-        AuthForm["AuthForm\n(src/components/auth/AuthForm.tsx)"]:::frontend
-        Navbar["Navbar\n(src/components/layout/Navbar.tsx)"]:::frontend
-        SummaryCard["SummaryCard\n(src/components/dashboard/SummaryCard.tsx)"]:::frontend
-        ExpenseChart["ExpenseChart\n(src/components/dashboard/ExpenseChart.tsx)"]:::frontend
-        TransactionForm["TransactionForm\n(src/components/transactions/TransactionForm.tsx)"]:::frontend
-        TransactionList["TransactionList\n(src/components/transactions/TransactionList.tsx)"]:::frontend
-        Button["Button\n(src/components/ui/Button.tsx)"]:::frontend
-        CardUI["Card UI\n(src/components/ui/Card.tsx)"]:::frontend
-
-        DashboardPage["DashboardPage\n(src/pages/DashboardPage.tsx)"]:::frontend
-        LoginPage["LoginPage\n(src/pages/LoginPage.tsx)"]:::frontend
-        RegisterPage["RegisterPage\n(src/pages/RegisterPage.tsx)"]:::frontend
-        ProfilePage["ProfilePage\n(src/pages/ProfilePage.tsx)"]:::frontend
-        TransactionsPage["TransactionsPage\n(src/pages/TransactionsPage.tsx)"]:::frontend
-
-        subgraph "Contexts"
-            direction TB
-            AuthContextNode["AuthContext\n(src/contexts/AuthContext.tsx)"]:::state
-            TransactionContextNode["TransactionContext\n(src/contexts/TransactionContext.tsx)"]:::state
-            ThemeContextNode["ThemeContext\n(src/contexts/ThemeContext.tsx)"]:::state
-        end
-
-        subgraph "Utils & Types"
-            Formatters["Formatters\n(src/utils/formatters.ts)"]:::utility
-            Types["Types\n(src/types/index.ts)"]:::utility
-        end
-
-        Main["App Entry\n(src/main.tsx)"]:::frontend
-        ViteConfig["Vite Config\n(vite.config.ts)"]:::utility
-        EnvTypes["Env Types\n(src/vite-env.d.ts)"]:::utility
-        TailwindConfig["Tailwind Config\n(tailwind.config.js)"]:::utility
-        Postcss["PostCSS Config\n(postcss.config.js)"]:::utility
-        IndexCSS["Global CSS\n(src/index.css)"]:::utility
-
-        Browser -->|"loads"| Main
-        Main -->|wraps| AuthContextNode
-        Main -->|wraps| TransactionContextNode
-        Main -->|wraps| ThemeContextNode
-        Main -->|uses| Router
-        Router -->|routes| LoginPage
-        Router -->|routes| RegisterPage
-        Router -->|routes| DashboardPage
-        Router -->|routes| ProfilePage
-        Router -->|routes| TransactionsPage
-
-        DashboardPage -->|"uses"| Navbar
-        DashboardPage -->|"uses"| SummaryCard
-        DashboardPage -->|"uses"| ExpenseChart
-
-        TransactionsPage -->|"uses"| TransactionForm
-        TransactionsPage -->|"uses"| TransactionList
-
-        LoginPage -->|"uses"| AuthForm
-        RegisterPage -->|"uses"| AuthForm
-
-        AuthContextNode -->|"provides auth state"| ProtectedRoute
-        ProtectedRoute -->|guards| DashboardPage
-        ProtectedRoute -->|guards| ProfilePage
-        ProtectedRoute -->|guards| TransactionsPage
-
-        AuthForm -->|"dispatches actions"| AuthContextNode
-        TransactionForm -->|"dispatches actions"| TransactionContextNode
-        TransactionList -->|"listens to updates"| TransactionContextNode
-
-        Formatters -->|helper| DashboardPage
-        Types -->|types| DashboardPage
-        Types -->|types| TransactionForm
-
-        ViteConfig -->|configures| Main
-        EnvTypes -->|types| Main
-        TailwindConfig -->|styles| Main
-        Postcss -->|styles| Main
-        IndexCSS -->|styles| Main
-    end
-
-    %% Firebase BaaS
-    subgraph "Firebase BaaS" 
-        direction TB
-        FirebaseInit["Firebase SDK Init\n(src/firebase/config.ts)"]:::service
-        FirebaseAuth["Firebase Authentication"]:::service
-        FirestoreDB["Firestore Database"]:::service
-    end
-
-    Main -->|"initializes"| FirebaseInit
-    FirebaseInit --> FirebaseAuth
-    FirebaseInit --> FirestoreDB
-
-    AuthContextNode -->|"calls SDK"| FirebaseAuth
-    TransactionContextNode -->|"calls SDK"| FirestoreDB
-    FirestoreDB -- real-time updates --> TransactionContextNode
-
-    %% CI/CD Pipeline
-    subgraph "CI/CD & Hosting"
-        direction TB
-        WorkflowMerge["GitHub Action\n(firebase-hosting-merge.yml)"]:::pipeline
-        WorkflowPR["GitHub Action\n(firebase-hosting-pull-request.yml)"]:::pipeline
-        BuildDir["Build Output\n(build/)"]:::pipeline
-        HTMLIndex["Index HTML\n(index.html)"]:::pipeline
-        HTML404["404 Page\n(public/404.html)"]:::pipeline
-        FirebaseJSON["firebase.json"]:::pipeline
-        Firebaserc[".firebaserc"]:::pipeline
-        Hosting["Firebase Hosting"]:::service
-    end
-
-    WorkflowMerge -->|on merge| BuildDir
-    WorkflowPR -->|on PR| BuildDir
-    BuildDir -->|deploy| Hosting
-    HTMLIndex -->|served by| Hosting
-    HTML404 -->|served by| Hosting
-    FirebaseJSON -->|config| Hosting
-    Firebaserc -->|config| Hosting
-
-    %% Click Events
-    click Router "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/App.tsx"
-    click ProtectedRoute "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/components/utils/ProtectedRoute.tsx"
-    click AuthForm "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/components/auth/AuthForm.tsx"
-    click Navbar "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/components/layout/Navbar.tsx"
-    click SummaryCard "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/components/dashboard/SummaryCard.tsx"
-    click ExpenseChart "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/components/dashboard/ExpenseChart.tsx"
-    click TransactionForm "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/components/transactions/TransactionForm.tsx"
-    click TransactionList "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/components/transactions/TransactionList.tsx"
-    click Button "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/components/ui/Button.tsx"
-    click CardUI "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/components/ui/Card.tsx"
-    click AuthContextNode "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/contexts/AuthContext.tsx"
-    click TransactionContextNode "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/contexts/TransactionContext.tsx"
-    click ThemeContextNode "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/contexts/ThemeContext.tsx"
-    click FirebaseInit "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/firebase/config.ts"
-    click DashboardPage "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/pages/DashboardPage.tsx"
-    click LoginPage "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/pages/LoginPage.tsx"
-    click RegisterPage "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/pages/RegisterPage.tsx"
-    click ProfilePage "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/pages/ProfilePage.tsx"
-    click TransactionsPage "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/pages/TransactionsPage.tsx"
-    click Formatters "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/utils/formatters.ts"
-    click Types "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/types/index.ts"
-    click Main "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/main.tsx"
-    click ViteConfig "https://github.com/sinha-19/smart-expense-tracker/blob/master/vite.config.ts"
-    click EnvTypes "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/vite-env.d.ts"
-    click TailwindConfig "https://github.com/sinha-19/smart-expense-tracker/blob/master/tailwind.config.js"
-    click Postcss "https://github.com/sinha-19/smart-expense-tracker/blob/master/postcss.config.js"
-    click IndexCSS "https://github.com/sinha-19/smart-expense-tracker/blob/master/src/index.css"
-    click WorkflowMerge "https://github.com/sinha-19/smart-expense-tracker/blob/master/.github/workflows/firebase-hosting-merge.yml"
-    click WorkflowPR "https://github.com/sinha-19/smart-expense-tracker/blob/master/.github/workflows/firebase-hosting-pull-request.yml"
-    click FirebaseJSON "https://github.com/sinha-19/smart-expense-tracker/blob/master/firebase.json"
-    click Firebaserc "https://github.com/sinha-19/smart-expense-tracker/blob/master/.firebaserc"
-    click HTMLIndex "https://github.com/sinha-19/smart-expense-tracker/blob/master/index.html"
-    click HTML404 "https://github.com/sinha-19/smart-expense-tracker/blob/master/public/404.html"
-    click BuildDir "https://github.com/sinha-19/smart-expense-tracker/tree/master/build/"
-
-    %% Styles
-    classDef frontend fill:#D0E6FF,stroke:#0366d6,color:#0366d6
-    classDef state fill:#E6FFEA,stroke:#28A745,color:#28A745
-    classDef utility fill:#FFF8E1,stroke:#FFC107,color:#FFC107
-    classDef service fill:#FFEFEF,stroke:#DC3545,color:#DC3545
-    classDef pipeline fill:#F0F0F0,stroke:#6C757D,color:#6C757D
-    classDef external fill:#E8F0FE,stroke:#3367D6,color:#3367D6
-```
